@@ -76,6 +76,7 @@ dependencies {
 
     //Picasso
     implementation picassoLib
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //Testing
     testImplementation jUnitLib
