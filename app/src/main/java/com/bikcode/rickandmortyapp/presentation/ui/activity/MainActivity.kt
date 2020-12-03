@@ -1,10 +1,12 @@
-package com.bikcode.rickandmortyapp.presentation.ui
+package com.bikcode.rickandmortyapp.presentation.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.bikcode.rickandmortyapp.R
+import com.bikcode.rickandmortyapp.presentation.ui.fragment.FavoriteFragment
+import com.bikcode.rickandmortyapp.presentation.ui.fragment.HomeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {

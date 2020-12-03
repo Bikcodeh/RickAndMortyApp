@@ -17,7 +17,7 @@ buildscript {
     ext {
 
         //SDK & Tools
-        minSdkVersion = 23
+        minSdkVersion = 21
         targetSdkVersion = 30
         compileSdkVersion = 30
         versionCode = 1
@@ -84,6 +84,7 @@ buildscript {
 
         //Rx
         rxKotlinLib = "io.reactivex.rxjava2:rxkotlin:$rxKotlin_version"
+        rxJavaLib = "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
 
         //Picasso
         picassoLib = "com.squareup.picasso:picasso:$picasso_version"

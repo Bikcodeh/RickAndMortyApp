@@ -6,5 +6,5 @@ import retrofit2.http.GET
 interface APIService {
 
     @GET(APIConstants.ENDPOINT_CHARACTER)
-    fun getCharacters(): Single<List<CharacterResponseServer>>
+    fun getCharacters(): Single<CharacterResponseServer>
 }

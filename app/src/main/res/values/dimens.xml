@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="twelve_dp">12dp</dimen>
+    <dimen name="four_dp">4dp</dimen>
+    <dimen name="character_list_item_height_size">160dp</dimen>
+    <dimen name="sixteen_dp">16dp</dimen>
+</resources>
