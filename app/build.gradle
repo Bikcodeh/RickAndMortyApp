@@ -83,6 +83,10 @@ dependencies {
     implementation picassoLib
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    //Navigation component
+    implementation navigationFragmentLib
+    implementation navigationUiLib
+
     //Testing
     testImplementation jUnitLib
     androidTestImplementation jUnitExtLib

@@ -39,6 +39,7 @@ buildscript {
         retrofitAdapterRxJava_version = "2.6.0"
         logginInterceptor_version = "4.5.0"
         picasso_version = "2.71828"
+        nav_version = "2.3.1"
 
         //test implementations
         jUnitImplementation_version = "1.1.2"
@@ -88,6 +89,10 @@ buildscript {
 
         //Picasso
         picassoLib = "com.squareup.picasso:picasso:$picasso_version"
+
+        //navigation component
+        navigationFragmentLib = "androidx.navigation:navigation-fragment-ktx:$nav_version"
+        navigationUiLib = "androidx.navigation:navigation-ui-ktx:$nav_version"
 
         //views
         appCompatLib = "androidx.appcompat:appcompat:$appCompat_version"
