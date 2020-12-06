@@ -8,11 +8,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.databinding.ItemCharacterBinding
+import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
 import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
 import com.bikcode.rickandmortyapp.presentation.util.bindImageUrl
 import com.bikcode.rickandmortyapp.presentation.util.bindingInflate
 
-class CharacterListAdapter : RecyclerView.Adapter<CharacterListAdapter.CharacterListViewHolder>() {
+class CharacterListAdapter(private val characterCallback: CharacterCallback) :
+    RecyclerView.Adapter<CharacterListAdapter.CharacterListViewHolder>() {
 
     private val characterList: MutableList<CharacterServer> = mutableListOf()
 
@@ -35,11 +37,14 @@ class CharacterListAdapter : RecyclerView.Adapter<CharacterListAdapter.Character
 
     override fun onBindViewHolder(holder: CharacterListViewHolder, position: Int) {
         holder.bind(getCharacterItem(position))
+        holder.bindClick()
     }
 
-    class CharacterListViewHolder(
+    inner class CharacterListViewHolder(
         private val binding: ItemCharacterBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        private val imageCharacter: ImageView = itemView.findViewById(R.id.item_character_iv_image)
 
         fun bind(character: CharacterServer) {
             with(binding) {
@@ -52,6 +57,9 @@ class CharacterListAdapter : RecyclerView.Adapter<CharacterListAdapter.Character
                     )
                 }
             }
+        }
+        fun bindClick() {
+            itemView.setOnClickListener { characterCallback.onCharacterClick(adapterPosition, imageCharacter) }
         }
     }
 }

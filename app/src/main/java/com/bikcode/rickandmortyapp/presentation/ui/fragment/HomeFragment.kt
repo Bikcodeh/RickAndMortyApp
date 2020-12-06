@@ -1,40 +1,29 @@
 package com.bikcode.rickandmortyapp.presentation.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bikcode.rickandmortyapp.R
+import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
+import com.bikcode.rickandmortyapp.presentation.ui.activity.CharacterDetailActivity
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.CharacterListAdapter
+import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import com.bikcode.rickandmortyapp.presentation.util.showLongToast
 import com.bikcode.rickandmortyapp.presentation.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-class HomeFragment: Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+class HomeFragment : Fragment(), CharacterCallback {
 
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var characterListAdapter: CharacterListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-
-        init()
-        handle()
-        homeViewModel.getCharacters()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,30 +32,38 @@ class HomeFragment: Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    private fun init() {
-        characterListAdapter = CharacterListAdapter()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
+
+
+        homeViewModel.events.observe(viewLifecycleOwner, Observer(this::validateEvents))
+        homeViewModel.getCharacters()
     }
 
-    private fun handle() {
-        homeViewModel.characterList.observe(this, Observer { state ->
-            when(state) {
-                is HomeViewModel.CharacterState.ShowCharacterList -> {
-                    characterListAdapter.setData(state.characterList)
+    private fun init() {
+        characterListAdapter = CharacterListAdapter(this)
+    }
+
+    private fun validateEvents(event: Event<HomeViewModel.CharacterState>?) {
+        event?.getContentIfNotHandled()?.let { navigation ->
+            when(navigation){
+                is HomeViewModel.CharacterState.ShowCharacterList -> navigation.run {
+                    characterListAdapter.setData(navigation.characterList)
                     home_rv_characters.apply {
                         layoutManager = GridLayoutManager(context, 2)
                         adapter = characterListAdapter
                     }
                     home_progress.visibility = View.GONE
                 }
-                is HomeViewModel.CharacterState.ShowCharacterError -> {
-                    context?.showLongToast(state.error)
+                is HomeViewModel.CharacterState.ShowCharacterError -> navigation.run {
+                    context?.showLongToast(navigation.error)
                     home_progress.visibility = View.GONE
                 }
-                HomeViewModel.CharacterState.Loading -> {
-                    home_progress.visibility = View.VISIBLE
-                }
+                HomeViewModel.CharacterState.ShowLoading -> home_progress.visibility = View.VISIBLE
+                HomeViewModel.CharacterState.HideLoading -> home_progress.visibility = View.GONE
             }
-        })
+        }
     }
 
     companion object {
@@ -74,12 +71,13 @@ class HomeFragment: Fragment() {
         const val TAG = "HOME_FRAGMENT"
 
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(args: Bundle? = Bundle()) =
             HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+                arguments = args
             }
+    }
+
+    override fun onCharacterClick(pos: Int, characterImage: ImageView) {
+        startActivity(Intent(context, CharacterDetailActivity::class.java))
     }
 }
