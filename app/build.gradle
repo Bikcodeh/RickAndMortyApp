@@ -83,6 +83,9 @@ dependencies {
     implementation picassoLib
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    //CircleImage
+    implementation circleImageLib
+
     //Testing
     testImplementation jUnitLib
     androidTestImplementation jUnitExtLib

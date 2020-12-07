@@ -8,8 +8,6 @@ import com.bikcode.rickandmortyapp.presentation.data.character.CharacterReposito
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 
 class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewModel() {

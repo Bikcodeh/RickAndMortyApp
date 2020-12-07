@@ -21,7 +21,7 @@ class RetrofitClient {
 
     fun createWebService(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(APIConstants.BASE_API_URL)
+            .baseUrl(baseUrl!!)
             .client(createOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -33,6 +33,7 @@ class RetrofitClient {
     }
 
     companion object {
+        var baseUrl: String? = APIConstants.BASE_API_URL
         private const val CONNECT_TIMEOUT = 15L
         private const val WRITE_TIMEOUT = 15L
         private const val READ_TIMEOUT = 15L

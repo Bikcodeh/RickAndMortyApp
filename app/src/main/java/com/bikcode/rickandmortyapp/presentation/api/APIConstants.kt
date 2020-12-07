@@ -16,4 +16,5 @@ object APIConstants {
     const val KEY_SPECIES = "species"
     const val KEY_STATUS = "status"
     const val KEY_URL = "url"
+    const val KEY_DATE = "air_date"
 }

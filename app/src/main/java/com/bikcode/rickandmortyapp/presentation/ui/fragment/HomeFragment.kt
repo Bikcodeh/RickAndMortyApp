@@ -78,6 +78,9 @@ class HomeFragment : Fragment(), CharacterCallback {
     }
 
     override fun onCharacterClick(pos: Int, characterImage: ImageView) {
-        startActivity(Intent(context, CharacterDetailActivity::class.java))
+        val intent = Intent(context, CharacterDetailActivity::class.java).apply {
+            putExtra("user", characterListAdapter.getCharacterItem(pos))
+        }
+        startActivity(intent)
     }
 }

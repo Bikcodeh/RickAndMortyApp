@@ -39,6 +39,7 @@ buildscript {
         retrofitAdapterRxJava_version = "2.6.0"
         logginInterceptor_version = "4.5.0"
         picasso_version = "2.71828"
+        circleImage_version = "3.1.0"
 
         //test implementations
         jUnitImplementation_version = "1.1.2"
@@ -88,6 +89,8 @@ buildscript {
 
         //Picasso
         picassoLib = "com.squareup.picasso:picasso:$picasso_version"
+
+        circleImageLib = "de.hdodenhof:circleimageview:$circleImage_version"
 
         //views
         appCompatLib = "androidx.appcompat:appcompat:$appCompat_version"

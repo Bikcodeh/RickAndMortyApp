@@ -1,6 +1,7 @@
 package com.bikcode.rickandmortyapp.presentation.api
 
 import android.os.Parcelable
+import com.bikcode.rickandmortyapp.presentation.api.APIConstants.KEY_DATE
 import com.bikcode.rickandmortyapp.presentation.api.APIConstants.KEY_EPISODE
 import com.bikcode.rickandmortyapp.presentation.api.APIConstants.KEY_GENDER
 import com.bikcode.rickandmortyapp.presentation.api.APIConstants.KEY_ID
@@ -45,5 +46,7 @@ data class OriginServer(
 
 data class EpisodeServer(
     @SerializedName(KEY_ID) val id: Int,
-    @SerializedName(KEY_NAME) val name: String
+    @SerializedName(KEY_NAME) val name: String,
+    @SerializedName(KEY_DATE) val date: String,
+    @SerializedName(KEY_EPISODE) val episode: String
 )
