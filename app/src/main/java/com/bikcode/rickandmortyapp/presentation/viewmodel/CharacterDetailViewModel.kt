@@ -3,17 +3,27 @@ package com.bikcode.rickandmortyapp.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
 import com.bikcode.rickandmortyapp.presentation.api.EpisodeServer
+import com.bikcode.rickandmortyapp.presentation.data.character.CharacterRepositoryImpl
 import com.bikcode.rickandmortyapp.presentation.data.episode.EpisodeRepositoryImpl
+import com.bikcode.rickandmortyapp.presentation.database.toCharacterEntity
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
-class CharacterDetailViewModel(private val episodeRepository: EpisodeRepositoryImpl) : ViewModel() {
+class CharacterDetailViewModel(
+    private val episodeRepository: EpisodeRepositoryImpl,
+    private val characterRepository: CharacterRepositoryImpl
+) : ViewModel() {
 
     private val _events: MutableLiveData<Event<CharacterDetailEvent>> = MutableLiveData()
     val events: LiveData<Event<CharacterDetailEvent>> get() = _events
+
+    private val _isFavorite: MutableLiveData<Boolean> = MutableLiveData()
+    val isFavorite: LiveData<Boolean> get() = _isFavorite
 
     private var isLoading = false
 
@@ -39,6 +49,28 @@ class CharacterDetailViewModel(private val episodeRepository: EpisodeRepositoryI
         )
     }
 
+    fun validateCharacter(characterServer: CharacterServer?) {
+        if (characterServer == null) {
+            _events.value = Event(CharacterDetailEvent.CloseActivity)
+            return
+        }
+        validateFavoriteCharacterStatus(characterServer.id)
+    }
+
+    private fun validateFavoriteCharacterStatus(id: Int) {
+        disposable.add(characterRepository.getFavoriteCharacterStatus(id)
+            .subscribe { isFavorite ->
+                _isFavorite.value = isFavorite
+            })
+    }
+
+    fun updateFavoriteCharacterStatus(characterServer: CharacterServer) {
+        disposable.add(characterRepository.updateFavoriteCharacterStatus(characterServer.toCharacterEntity())
+            .subscribe { isFavorite ->
+                _isFavorite.value = isFavorite
+            })
+    }
+
     private fun showLoading() {
         isLoading = true
         _events.postValue(Event(CharacterDetailEvent.ShowLoadingListEpisodes))
@@ -59,5 +91,6 @@ class CharacterDetailViewModel(private val episodeRepository: EpisodeRepositoryI
         data class ShowErrorList(val error: String) : CharacterDetailEvent()
         object ShowLoadingListEpisodes : CharacterDetailEvent()
         object HideLoadingListEpisodes : CharacterDetailEvent()
+        object CloseActivity : CharacterDetailEvent()
     }
 }

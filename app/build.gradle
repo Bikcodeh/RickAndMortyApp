@@ -24,8 +24,9 @@ android {
         }
     }
 
-    dataBinding {
-        enabled = true
+    buildFeatures{
+        dataBinding = true
+        viewBinding = true
     }
 
     kotlinOptions {
@@ -73,7 +74,7 @@ dependencies {
     //Room
     implementation roomRuntimeLib
     implementation roomRxJava
-    implementation roomCompilerLib
+    kapt roomCompilerLib
 
     //RX
     implementation rxKotlinLib

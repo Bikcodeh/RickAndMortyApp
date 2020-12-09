@@ -28,7 +28,15 @@ class CharacterDetailActivity : AppCompatActivity() {
         initComponents()
 
         characterDetailViewModel.events.observe(this, Observer(this::validateEvents))
-        character?.episodeList?.let { characterDetailViewModel.getEpisodes(it) }
+        characterDetailViewModel.isFavorite.observe(this, Observer(this::validateFavoriteStatus))
+
+        character?.let {
+            characterDetailViewModel.getEpisodes(it.episodeList)
+            characterDetailViewModel.validateCharacter(it)
+            detail_iv_favorite.setOnClickListener { _ ->
+                characterDetailViewModel.updateFavoriteCharacterStatus(it)
+            }
+        }
     }
 
 
@@ -44,10 +52,26 @@ class CharacterDetailActivity : AppCompatActivity() {
                 is CharacterDetailViewModel.CharacterDetailEvent.ShowErrorList -> {
                     baseContext.showLongToast(state.error)
                 }
-                CharacterDetailViewModel.CharacterDetailEvent.ShowLoadingListEpisodes -> detail_pb_progress.visibility = View.VISIBLE
-                CharacterDetailViewModel.CharacterDetailEvent.HideLoadingListEpisodes -> detail_pb_progress.visibility = View.GONE
+                CharacterDetailViewModel.CharacterDetailEvent.ShowLoadingListEpisodes -> detail_pb_progress.visibility =
+                    View.VISIBLE
+                CharacterDetailViewModel.CharacterDetailEvent.HideLoadingListEpisodes -> detail_pb_progress.visibility =
+                    View.GONE
+                CharacterDetailViewModel.CharacterDetailEvent.CloseActivity -> {
+                    baseContext.showLongToast(getString(R.string.no_data_character))
+                    finish()
+                }
             }
         }
+    }
+
+    private fun validateFavoriteStatus(isFavorite: Boolean?) {
+        detail_iv_favorite.setImageResource(
+            if (isFavorite != null && isFavorite) {
+                R.drawable.ic_favorite
+            } else {
+                R.drawable.ic_favorite_border
+            }
+        )
     }
 
     private fun initComponents() {

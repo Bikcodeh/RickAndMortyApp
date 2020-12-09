@@ -7,6 +7,6 @@ import com.bikcode.rickandmortyapp.presentation.data.episode.EpisodeRepositoryIm
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    factory { CharacterRepositoryImpl(get()) }
+    factory { CharacterRepositoryImpl(get(), get()) }
     factory { EpisodeRepositoryImpl(apiService =  get()) }
 }

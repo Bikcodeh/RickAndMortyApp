@@ -8,6 +8,15 @@
     app:layout_behavior="?attr/actionBarSize"
     tools:context=".presentation.ui.activity.CharacterDetailActivity">
 
+    <ImageView
+        android:id="@+id/detail_iv_favorite"
+        android:layout_width="32dp"
+        android:contentDescription="@string/favorite_description"
+        android:layout_height="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_favorite_border" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/detail_civ_image_character"
         android:layout_width="160dp"

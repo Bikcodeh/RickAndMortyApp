@@ -1,13 +1,11 @@
-package com.bikcode.rickandmortyapp.presentation.database.dao.character
+package com.bikcode.rickandmortyapp.presentation.database.character
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 
+@Dao
 interface CharacterDao {
 
     @Query("SELECT * FROM Character")

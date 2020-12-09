@@ -13,4 +13,6 @@
     <string name="detail_planet">Planet:</string>
     <string name="detail_origin">Origin:</string>
     <string name="episodes">Episodes</string>
+    <string name="no_data_character">There is not data for this character</string>
+    <string name="favorite_description">Favorite Character</string>
 </resources>

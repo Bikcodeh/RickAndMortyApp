@@ -1,8 +1,6 @@
-package com.bikcode.rickandmortyapp.presentation.database.dao.character
+package com.bikcode.rickandmortyapp.presentation.database.character
 
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
-import com.bikcode.rickandmortyapp.presentation.database.dao.character.CharacterDao
-import com.bikcode.rickandmortyapp.presentation.database.dao.character.CharacterDataSource
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 
