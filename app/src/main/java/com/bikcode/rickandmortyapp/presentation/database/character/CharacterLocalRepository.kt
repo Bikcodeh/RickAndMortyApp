@@ -1,5 +1,6 @@
 package com.bikcode.rickandmortyapp.presentation.database.character
 
+import androidx.lifecycle.LiveData
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -7,7 +8,7 @@ import io.reactivex.Maybe
 class CharacterLocalRepository(private val characterDao: CharacterDao):
     CharacterDataSource {
 
-    override fun getAllFavoriteCharacters(): Flowable<List<CharacterEntity>> {
+    override fun getAllFavoriteCharacters(): LiveData<List<CharacterEntity>> {
         return characterDao.getAllFavoriteCharacters()
     }
 
