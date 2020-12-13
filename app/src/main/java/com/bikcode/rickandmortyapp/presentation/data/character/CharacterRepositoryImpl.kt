@@ -3,6 +3,8 @@ package com.bikcode.rickandmortyapp.presentation.data.character
 import com.bikcode.rickandmortyapp.presentation.api.APIService
 import com.bikcode.rickandmortyapp.presentation.api.CharacterResponseServer
 import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
+import com.bikcode.rickandmortyapp.presentation.api.toCharacterDomainList
+import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import com.bikcode.rickandmortyapp.presentation.database.character.CharacterLocalRepository
 import com.bikcode.rickandmortyapp.presentation.database.toCharacterEntity
@@ -16,8 +18,11 @@ class CharacterRepositoryImpl(
     private val characterLocalRepository: CharacterLocalRepository
 ) : CharacterRepository {
 
-    override fun getCharacters(): Single<CharacterResponseServer> {
+    override fun getCharacters(): Single<List<Character>> {
         return apiService.getCharacters()
+            .map(CharacterResponseServer::toCharacterDomainList)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getFavoriteCharacterStatus(id: Int): Maybe<Boolean> {
@@ -34,7 +39,7 @@ class CharacterRepositoryImpl(
         return characterLocalRepository.getCharacterById(characterEntity.id)
             .isEmpty
             .flatMapMaybe { isEmpty ->
-                if(isEmpty)
+                if (isEmpty)
                     characterLocalRepository.insertCharacter(characterEntity)
                 else
                     characterLocalRepository.deleteCharacter(characterEntity)

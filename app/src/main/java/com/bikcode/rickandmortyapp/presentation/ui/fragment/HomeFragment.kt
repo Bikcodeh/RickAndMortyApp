@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
+import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterParcelable
 import com.bikcode.rickandmortyapp.presentation.ui.activity.CharacterDetailActivity
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.CharacterListAdapter
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
@@ -79,7 +80,7 @@ class HomeFragment : Fragment(), CharacterCallback {
 
     override fun onCharacterClick(pos: Int, characterImage: ImageView) {
         val intent = Intent(context, CharacterDetailActivity::class.java).apply {
-            putExtra("user", characterListAdapter.getCharacterItem(pos))
+            putExtra("user", characterListAdapter.getCharacterItem(pos).toCharacterParcelable())
         }
         startActivity(intent)
     }

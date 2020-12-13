@@ -6,6 +6,9 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
+import com.bikcode.rickandmortyapp.presentation.data.Character
+import com.bikcode.rickandmortyapp.presentation.parcelables.CharacterParcelable
+import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterServer
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.EpisodeAdapter
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import com.bikcode.rickandmortyapp.presentation.util.showLongToast
@@ -17,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CharacterDetailActivity : AppCompatActivity() {
 
     private val characterDetailViewModel: CharacterDetailViewModel by viewModel()
-    private var character: CharacterServer? = null
+    private var characterParcelable: CharacterParcelable? = null
     private val episodeAdapter: EpisodeAdapter by lazy {
         EpisodeAdapter()
     }
@@ -30,11 +33,11 @@ class CharacterDetailActivity : AppCompatActivity() {
         characterDetailViewModel.events.observe(this, Observer(this::validateEvents))
         characterDetailViewModel.isFavorite.observe(this, Observer(this::validateFavoriteStatus))
 
-        character?.let {
+        characterParcelable?.let {
             characterDetailViewModel.getEpisodes(it.episodeList)
-            characterDetailViewModel.validateCharacter(it)
+            characterDetailViewModel.validateCharacter(it.toCharacterServer())
             detail_iv_favorite.setOnClickListener { _ ->
-                characterDetailViewModel.updateFavoriteCharacterStatus(it)
+                characterDetailViewModel.updateFavoriteCharacterStatus(it.toCharacterServer())
             }
         }
     }
@@ -76,13 +79,13 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun initComponents() {
         intent?.let {
-            character = it.getParcelableExtra<CharacterServer>("user")
+            characterParcelable = it.getParcelableExtra<CharacterParcelable>("user")
         }
-        bind(character)
+        bind(characterParcelable)
     }
 
-    private fun bind(characterServer: CharacterServer?) {
-        characterServer?.let { data ->
+    private fun bind(characterParcelable: CharacterParcelable?) {
+        characterParcelable?.let { data ->
             Picasso.get().load(data.image)
                 .placeholder(R.drawable.ic_baseline_image_placeholder_24)
                 .error(R.drawable.ic_baseline_broken_image_24)

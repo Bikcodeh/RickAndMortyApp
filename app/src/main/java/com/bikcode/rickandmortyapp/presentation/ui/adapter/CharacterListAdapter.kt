@@ -1,24 +1,21 @@
 package com.bikcode.rickandmortyapp.presentation.ui.adapter
 
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.databinding.ItemCharacterBinding
 import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
-import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
+import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.util.bindImageUrl
 import com.bikcode.rickandmortyapp.presentation.util.bindingInflate
 
 class CharacterListAdapter(private val characterCallback: CharacterCallback) :
     RecyclerView.Adapter<CharacterListAdapter.CharacterListViewHolder>() {
 
-    private val characterList: MutableList<CharacterServer> = mutableListOf()
+    private val characterList: MutableList<Character> = mutableListOf()
 
-    fun setData(characterList: List<CharacterServer>) {
+    fun setData(characterList: List<Character>) {
         this.characterList.clear()
         this.characterList.addAll(characterList)
         notifyDataSetChanged()
@@ -46,7 +43,7 @@ class CharacterListAdapter(private val characterCallback: CharacterCallback) :
 
         private val imageCharacter: ImageView = itemView.findViewById(R.id.item_character_iv_image)
 
-        fun bind(character: CharacterServer) {
+        fun bind(character: Character) {
             with(binding) {
                 character.run {
                     itemCharacterTvName.text = name
