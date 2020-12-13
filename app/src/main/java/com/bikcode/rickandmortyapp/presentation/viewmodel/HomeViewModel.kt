@@ -32,12 +32,12 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
 
     private fun showLoading() {
         isLoading = true
-        _events.postValue(Event(CharacterState.ShowLoading))
+        _events.value = Event(CharacterState.ShowLoading)
     }
 
     private fun hideLoading() {
         isLoading = false
-        _events.postValue(Event(CharacterState.HideLoading))
+        _events.value = Event(CharacterState.HideLoading)
     }
 
     private val disposable: CompositeDisposable by lazy {

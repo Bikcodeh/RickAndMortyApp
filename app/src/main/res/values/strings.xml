@@ -16,4 +16,5 @@
     <string name="no_data_character">There is not data for this character</string>
     <string name="favorite_description">Favorite Character</string>
     <string name="error_favorite_characters">Error getting favorite characters</string>
+    <string name="error_no_available_data">No data available at the moment</string>
 </resources>
