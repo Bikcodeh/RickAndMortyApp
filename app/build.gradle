@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -60,6 +64,7 @@ dependencies {
     //views
     implementation appCompatLib
     implementation constraintLayoutLib
+    implementation swipeRefreshLayoutLib
 
     //Retrofit
     implementation retrofitLib
@@ -89,7 +94,11 @@ dependencies {
 
     //Testing
     testImplementation jUnitLib
+    testImplementation coreTestingLib
+    testImplementation coreTestingRoomLib
     androidTestImplementation jUnitExtLib
     androidTestImplementation espressoCoreLib
+    testImplementation "androidx.room:room-testing:2.2.5"
+    testImplementation mockitoCoreLib
 
 }

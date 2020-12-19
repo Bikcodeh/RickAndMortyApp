@@ -40,6 +40,10 @@ buildscript {
         logginInterceptor_version = "4.5.0"
         picasso_version = "2.71828"
         circleImage_version = "3.1.0"
+        mockitoCore_version = "1.10.19"
+        coreTesting_version = "1.0.0"
+        coreTestingRoom_version = "1.0.0"
+        swipeRefreshLayout_version = "1.1.0"
 
         //test implementations
         jUnitImplementation_version = "1.1.2"
@@ -56,9 +60,11 @@ buildscript {
         //Material Design
         materialDesignLib = "com.google.android.material:material:$materialDesign_version"
 
-        //JUnit
+        //Testing
         jUnitLib = "junit:junit:$jUnit_version"
         jUnitExtLib = "androidx.test.ext:junit:$jUnitImplementation_version"
+        coreTestingLib = "android.arch.core:core-testing:$coreTesting_version"
+        coreTestingRoomLib = "android.arch.core:core-testing:$coreTestingRoom_version"
 
         //Espreso
         espressoCoreLib = "androidx.test.espresso:espresso-core:$espressoImplementation_version"
@@ -92,10 +98,14 @@ buildscript {
 
         circleImageLib = "de.hdodenhof:circleimageview:$circleImage_version"
 
+        //Mockito
+        mockitoCoreLib = "org.mockito:mockito-core:$mockitoCore_version"
+
         //views
         appCompatLib = "androidx.appcompat:appcompat:$appCompat_version"
         constraintLayoutLib = "androidx.constraintlayout:constraintlayout:$constraintLayout_version"
         recyclerviewLib = "androidx.recyclerview:recyclerview:$recyclerview_version"
+        swipeRefreshLayoutLib = "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayout_version"
     }
 }
 
