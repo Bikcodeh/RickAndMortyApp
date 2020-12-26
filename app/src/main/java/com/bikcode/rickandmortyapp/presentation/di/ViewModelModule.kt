@@ -1,5 +1,6 @@
 package com.bikcode.rickandmortyapp.presentation.di
 
+import androidx.lifecycle.MutableLiveData
 import com.bikcode.rickandmortyapp.presentation.viewmodel.CharacterDetailViewModel
 import com.bikcode.rickandmortyapp.presentation.viewmodel.FavoriteViewModel
 import com.bikcode.rickandmortyapp.presentation.viewmodel.HomeViewModel
@@ -8,6 +9,12 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
-    viewModel { CharacterDetailViewModel(episodeRepository = get(), characterRepository = get()) }
+    viewModel {
+        CharacterDetailViewModel(
+            episodeRepository = get(),
+            characterRepository = get(),
+            _events = MutableLiveData()
+        )
+    }
     viewModel { FavoriteViewModel(get()) }
 }

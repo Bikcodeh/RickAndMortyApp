@@ -11,21 +11,22 @@ import com.bikcode.rickandmortyapp.presentation.database.toCharacterEntity
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class CharacterDetailViewModel(
     private val episodeRepository: EpisodeRepositoryImpl,
-    private val characterRepository: CharacterRepositoryImpl
+    private val characterRepository: CharacterRepositoryImpl,
+    private val _events: MutableLiveData<Event<CharacterDetailEvent>> = MutableLiveData()
 ) : ViewModel() {
 
-    private val _events: MutableLiveData<Event<CharacterDetailEvent>> = MutableLiveData()
-    val events: LiveData<Event<CharacterDetailEvent>> get() = _events
+    val eventsState: LiveData<Event<CharacterDetailEvent>>
+        get() = _events
 
     private val _isFavorite: MutableLiveData<Boolean> = MutableLiveData()
-    val isFavorite: LiveData<Boolean> get() = _isFavorite
+    val isFavorite: LiveData<Boolean>
+        get() = _isFavorite
 
-    private var isLoading = false
+    private var isLoading: Boolean = false
 
     private val disposable: CompositeDisposable by lazy {
         CompositeDisposable()
@@ -50,18 +51,25 @@ class CharacterDetailViewModel(
     }
 
     fun validateCharacter(characterServer: CharacterServer?) {
-        if (characterServer == null) {
+
+        characterServer?.let {
+            validateFavoriteCharacterStatus(it.id)
+        } ?: run {
             _events.value = Event(CharacterDetailEvent.CloseActivity)
-            return
         }
-        validateFavoriteCharacterStatus(characterServer.id)
     }
 
     private fun validateFavoriteCharacterStatus(id: Int) {
-        disposable.add(characterRepository.getFavoriteCharacterStatus(id)
-            .subscribe { isFavorite ->
-                _isFavorite.value = isFavorite
-            })
+        disposable.add(
+            characterRepository.getFavoriteCharacterStatus(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ isFavorite ->
+                    _isFavorite.value = isFavorite
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     fun updateFavoriteCharacterStatus(characterServer: CharacterServer) {
@@ -82,8 +90,8 @@ class CharacterDetailViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
         disposable.clear()
+        super.onCleared()
     }
 
     sealed class CharacterDetailEvent {

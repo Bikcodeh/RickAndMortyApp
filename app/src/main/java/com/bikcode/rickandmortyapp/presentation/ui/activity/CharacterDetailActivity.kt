@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import com.bikcode.rickandmortyapp.R
-import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
-import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.parcelables.CharacterParcelable
 import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterServer
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.EpisodeAdapter
@@ -30,7 +28,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_character_detail)
         initComponents()
 
-        characterDetailViewModel.events.observe(this, Observer(this::validateEvents))
+        characterDetailViewModel.eventsState.observe(this, Observer(this::validateEvents))
         characterDetailViewModel.isFavorite.observe(this, Observer(this::validateFavoriteStatus))
 
         characterParcelable?.let {
@@ -47,7 +45,7 @@ class CharacterDetailActivity : AppCompatActivity() {
         event?.getContentIfNotHandled()?.let { state ->
             when (state) {
                 is CharacterDetailViewModel.CharacterDetailEvent.ShowListEpisodes -> {
-                    episodeAdapter.setData(state.list)
+                    episodeAdapter.episodeList = state.list.toMutableList()
                     detail_rv_episodes.apply {
                         adapter = episodeAdapter
                     }
@@ -79,7 +77,7 @@ class CharacterDetailActivity : AppCompatActivity() {
 
     private fun initComponents() {
         intent?.let {
-            characterParcelable = it.getParcelableExtra<CharacterParcelable>("user")
+            characterParcelable = it.getParcelableExtra("user")
         }
         bind(characterParcelable)
     }

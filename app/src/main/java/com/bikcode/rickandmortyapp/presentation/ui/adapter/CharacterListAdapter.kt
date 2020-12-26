@@ -10,7 +10,7 @@ import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.util.bindImageUrl
 import com.bikcode.rickandmortyapp.presentation.util.bindingInflate
 
-class CharacterListAdapter(private val characterCallback: CharacterCallback) :
+class CharacterListAdapter(private val characterCallback: (position: Int, image: ImageView) -> Unit) :
     RecyclerView.Adapter<CharacterListAdapter.CharacterListViewHolder>() {
 
     private val characterList: MutableList<Character> = mutableListOf()
@@ -29,7 +29,7 @@ class CharacterListAdapter(private val characterCallback: CharacterCallback) :
         )
 
     override fun getItemCount(): Int {
-        return characterList.size
+        return characterList.count()
     }
 
     override fun onBindViewHolder(holder: CharacterListViewHolder, position: Int) {
@@ -56,7 +56,7 @@ class CharacterListAdapter(private val characterCallback: CharacterCallback) :
             }
         }
         fun bindClick() {
-            itemView.setOnClickListener { characterCallback.onCharacterClick(adapterPosition, imageCharacter) }
+            itemView.setOnClickListener { characterCallback.invoke(adapterPosition, imageCharacter) }
         }
     }
 }

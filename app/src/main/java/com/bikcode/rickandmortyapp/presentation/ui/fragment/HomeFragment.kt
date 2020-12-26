@@ -2,15 +2,13 @@ package com.bikcode.rickandmortyapp.presentation.ui.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bikcode.rickandmortyapp.R
-import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
 import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterParcelable
 import com.bikcode.rickandmortyapp.presentation.ui.activity.CharacterDetailActivity
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.CharacterListAdapter
@@ -21,34 +19,31 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class HomeFragment : Fragment(), CharacterCallback {
+class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var characterListAdapter: CharacterListAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-
-
-        homeViewModel.events.observe(viewLifecycleOwner, Observer(this::validateEvents))
+        initObserver()
         homeViewModel.getCharacters()
     }
 
+    private fun initObserver() {
+        homeViewModel.events.observe(viewLifecycleOwner, Observer(this::validateEvents))
+    }
+
     private fun init() {
-        characterListAdapter = CharacterListAdapter(this)
+        characterListAdapter = CharacterListAdapter { position, image ->
+            onCharacterClick(position, image)
+        }
     }
 
     private fun validateEvents(event: Event<HomeViewModel.CharacterState>?) {
         event?.getContentIfNotHandled()?.let { navigation ->
-            when(navigation){
+            when (navigation) {
                 is HomeViewModel.CharacterState.ShowCharacterList -> navigation.run {
                     characterListAdapter.setData(navigation.characterList)
                     home_rv_characters.apply {
@@ -61,11 +56,20 @@ class HomeFragment : Fragment(), CharacterCallback {
                     context?.showLongToast(navigation.error)
                     home_progress.visibility = View.GONE
                 }
-                HomeViewModel.CharacterState.ShowLoading -> home_progress.visibility = View.VISIBLE
-                HomeViewModel.CharacterState.HideLoading -> home_progress.visibility = View.GONE
+                HomeViewModel.CharacterState.ShowLoading -> home_progress.visible()
+                HomeViewModel.CharacterState.HideLoading -> home_progress.gone()
             }
         }
     }
+
+    private fun View.visible() {
+        this.isVisible = true
+    }
+
+    private fun View.gone() {
+        this.isVisible = false
+    }
+
 
     companion object {
 
@@ -78,7 +82,7 @@ class HomeFragment : Fragment(), CharacterCallback {
             }
     }
 
-    override fun onCharacterClick(pos: Int, characterImage: ImageView) {
+    private fun onCharacterClick(pos: Int, characterImage: ImageView) {
         val intent = Intent(context, CharacterDetailActivity::class.java).apply {
             putExtra("user", characterListAdapter.getCharacterItem(pos).toCharacterParcelable())
         }

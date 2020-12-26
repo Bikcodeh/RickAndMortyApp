@@ -3,18 +3,17 @@ package com.bikcode.rickandmortyapp.presentation.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.presentation.api.EpisodeServer
+import kotlinx.android.synthetic.main.item_episode.view.*
+import kotlin.properties.Delegates
 
 class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() {
 
-    private val episodeList: MutableList<EpisodeServer> = mutableListOf()
+    //private val episodeList: MutableList<EpisodeServer> = mutableListOf()
 
-    fun setData(data: List<EpisodeServer>) {
-        episodeList.clear()
-        episodeList.addAll(data)
+     var episodeList: MutableList<EpisodeServer> by Delegates.observable(mutableListOf()) { _, _, _  ->
         notifyDataSetChanged()
     }
 
@@ -29,23 +28,14 @@ class EpisodeAdapter : RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder>() 
         holder.bind(getEpisode(position))
     }
 
-    fun getEpisode(position: Int) = episodeList[position]
+    private fun getEpisode(position: Int) = episodeList[position]
 
     inner class EpisodeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val item_episode_tv_episode =
-            itemView.findViewById<TextView>(R.id.item_episode_tv_episode)
-        private val item_episode_tv_episode_name =
-            itemView.findViewById<TextView>(R.id.item_episode_tv_episode_name)
-        private val item_episode_tv_episode_date =
-            itemView.findViewById<TextView>(R.id.item_episode_tv_episode_date)
-
         fun bind(episode: EpisodeServer) {
-            item_episode_tv_episode.text = episode.name
-            item_episode_tv_episode_name.text = episode.episode
-            item_episode_tv_episode_date.text = episode.date
-
-
+            itemView.item_episode_tv_episode.text = episode.name
+            itemView.item_episode_tv_episode_name.text = episode.episode
+            itemView.item_episode_tv_episode_date.text = episode.date
         }
     }
 }

@@ -4,4 +4,5 @@
     <dimen name="four_dp">4dp</dimen>
     <dimen name="character_list_item_height_size">160dp</dimen>
     <dimen name="sixteen_dp">16dp</dimen>
+    <dimen name="size_160dp">160dp</dimen>
 </resources>

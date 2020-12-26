@@ -59,8 +59,8 @@ class TestHomeViewModel {
 
         Mockito.verify(characterRepositoryImpl, Mockito.times(1)).getCharacters()
 
-        Mockito.verifyNoMoreInteractions(characterRepositoryImpl)
-        Mockito.verifyNoMoreInteractions(eventObserver)
+        Mockito.verifyNoMoreInteractions(characterRepositoryImpl, eventObserver)
+
     }
 
     @Test
