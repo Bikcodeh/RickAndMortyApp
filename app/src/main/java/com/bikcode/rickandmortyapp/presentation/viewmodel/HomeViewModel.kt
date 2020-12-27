@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.data.character.CharacterRepositoryImpl
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewModel() {
 
@@ -20,19 +22,21 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
             .doOnSubscribe {
                 showLoading()
             }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 hideLoading()
-                _events.postValue(Event(CharacterState.ShowCharacterList(it)))
+                _events.value = (Event(CharacterState.ShowCharacterList(it)))
             }, {
                 hideLoading()
-                _events.postValue(Event(CharacterState.ShowCharacterError(it.message ?: "Error")))
+                _events.value = (Event(CharacterState.ShowCharacterError(it.message ?: "Error")))
             })
         )
     }
 
     private fun showLoading() {
         isLoading = true
-        _events.value = Event(CharacterState.ShowLoading)
+        _events.postValue(Event(CharacterState.ShowLoading))
     }
 
     private fun hideLoading() {

@@ -1,8 +1,8 @@
 package com.bikcode.rickandmortyapp.presentation.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.presentation.parcelables.CharacterParcelable
@@ -18,7 +18,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CharacterDetailActivity : AppCompatActivity() {
 
     private val characterDetailViewModel: CharacterDetailViewModel by viewModel()
-    private var characterParcelable: CharacterParcelable? = null
+
+    private val characterParcelable: CharacterParcelable?
+        get() = intent?.getParcelableExtra(INFO_USER)
+
     private val episodeAdapter: EpisodeAdapter by lazy {
         EpisodeAdapter()
     }
@@ -76,13 +79,6 @@ class CharacterDetailActivity : AppCompatActivity() {
     }
 
     private fun initComponents() {
-        intent?.let {
-            characterParcelable = it.getParcelableExtra("user")
-        }
-        bind(characterParcelable)
-    }
-
-    private fun bind(characterParcelable: CharacterParcelable?) {
         characterParcelable?.let { data ->
             Picasso.get().load(data.image)
                 .placeholder(R.drawable.ic_baseline_image_placeholder_24)
@@ -95,5 +91,9 @@ class CharacterDetailActivity : AppCompatActivity() {
             detail_tv_status.text = data.status
             detail_tv_origin.text = data.origin.name
         }
+    }
+
+    companion object {
+        const val INFO_USER = "user"
     }
 }

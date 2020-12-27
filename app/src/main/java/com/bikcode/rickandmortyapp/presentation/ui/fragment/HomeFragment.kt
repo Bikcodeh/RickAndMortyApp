@@ -18,7 +18,6 @@ import com.bikcode.rickandmortyapp.presentation.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val homeViewModel: HomeViewModel by viewModel()
@@ -84,7 +83,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun onCharacterClick(pos: Int, characterImage: ImageView) {
         val intent = Intent(context, CharacterDetailActivity::class.java).apply {
-            putExtra("user", characterListAdapter.getCharacterItem(pos).toCharacterParcelable())
+            putExtra(
+                CharacterDetailActivity.INFO_USER,
+                characterListAdapter.getCharacterItem(pos).toCharacterParcelable()
+            )
         }
         startActivity(intent)
     }
