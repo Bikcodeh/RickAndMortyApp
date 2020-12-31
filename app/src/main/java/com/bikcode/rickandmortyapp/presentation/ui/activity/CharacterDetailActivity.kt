@@ -98,11 +98,6 @@ class CharacterDetailActivity : AppCompatActivity() {
             detail_tv_gender.text = data.gender
             detail_tv_status.text = data.status
             detail_tv_origin.text = data.origin.name
-            /*if(data.isFavorite) {
-                detail_iv_favorite.setImageResource(R.drawable.ic_favorite)
-            } else {
-                detail_iv_favorite.setImageResource(R.drawable.ic_favorite_border)
-            }*/
         }
     }
 }

@@ -49,7 +49,7 @@ class CharacterRepositoryImpl(
         return characterDao.getCharacterById(id)
             .isEmpty
             .flatMapMaybe { isEmpty ->
-                Maybe.just(!isEmpty)
+                Maybe.just(isEmpty)
             }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -57,5 +57,9 @@ class CharacterRepositoryImpl(
 
     override suspend fun updateFavoriteCharacterStatus(characterEntity: CharacterEntity): Int {
         return characterDao.updateStatus(characterEntity)
+    }
+
+    override suspend fun getCharacterStatusById(id: Int): Int {
+        return characterDao.getCharacterStatusById(id)
     }
 }

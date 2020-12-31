@@ -23,6 +23,9 @@ interface CharacterDao {
     @Query("SELECT * FROM Character WHERE character_id = :id")
     fun getCharacterById(id: Int): Maybe<CharacterEntity>
 
+    @Query("SELECT status_favorite FROM Character WHERE character_id = :id")
+    suspend fun getCharacterStatusById(id: Int): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCharacter(characterEntity: CharacterEntity)
 

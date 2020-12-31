@@ -16,4 +16,5 @@ interface CharacterRepository {
     fun getCharactersDB(): LiveData<List<CharacterEntity>>
     fun getFavoriteCharacterStatus(id: Int): Maybe<Boolean>
     suspend fun updateFavoriteCharacterStatus(characterEntity: CharacterEntity): Int
+    suspend fun getCharacterStatusById(id: Int): Int
 }

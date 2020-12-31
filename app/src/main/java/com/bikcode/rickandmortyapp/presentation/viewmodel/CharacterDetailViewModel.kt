@@ -10,6 +10,7 @@ import com.bikcode.rickandmortyapp.presentation.data.character.CharacterReposito
 import com.bikcode.rickandmortyapp.presentation.data.episode.EpisodeRepositoryImpl
 import com.bikcode.rickandmortyapp.presentation.database.toCharacterEntity
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
+import com.bikcode.rickandmortyapp.presentation.util.toInt
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
@@ -62,10 +63,13 @@ class CharacterDetailViewModel(
     }
 
     private fun validateFavoriteCharacterStatus(id: Int) {
-        disposable.add(characterRepository.getFavoriteCharacterStatus(id)
-            .subscribe { isFavorite ->
-                _isFavorite.value = if(isFavorite) 1 else 0
-            })
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                characterRepository.getCharacterStatusById(id)
+            }
+
+            _isFavorite.value = result
+        }
     }
 
     fun updateFavoriteCharacterStatus(characterServer: CharacterServer, callback: (Int) -> Unit) {
@@ -77,7 +81,8 @@ class CharacterDetailViewModel(
             val response = withContext(Dispatchers.Default) {
                 characterRepository.updateFavoriteCharacterStatus(character)
             }
-            callback(response)
+            if(response == 1)
+                callback(character.statusFavorite.toInt())
         }
     }
 
