@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import io.reactivex.Maybe
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CharacterDao {
@@ -12,16 +13,16 @@ interface CharacterDao {
     fun insertCharacters(characters: List<CharacterEntity>)
 
     @Query("SELECT COUNT(character_id) FROM character")
-    suspend fun countCharacters(): Int
+    fun countCharacters(): Flow<Int>
 
     @Query("SELECT * FROM character")
-    suspend fun getAllCharacters(): List<CharacterEntity>
+    fun getAllCharacters(): Flow<List<CharacterEntity>>
 
     @Query("SELECT * FROM Character WHERE status_favorite = 1")
     fun getAllFavoriteCharacters(): LiveData<List<CharacterEntity>>
 
     @Query("SELECT * FROM Character WHERE character_id = :id")
-    fun getCharacterById(id: Int): Maybe<CharacterEntity>
+    fun isCharacterFavorite(id: Int): Maybe<CharacterEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCharacter(characterEntity: CharacterEntity)

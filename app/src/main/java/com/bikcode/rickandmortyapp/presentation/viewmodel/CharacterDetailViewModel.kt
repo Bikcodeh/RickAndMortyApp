@@ -29,8 +29,6 @@ class CharacterDetailViewModel(
     private val _isFavorite: MutableLiveData<Int> = MutableLiveData()
     val isFavorite: LiveData<Int> get() = _isFavorite
 
-    private var isLoading = false
-
     private val disposable: CompositeDisposable by lazy {
         CompositeDisposable()
     }
@@ -70,11 +68,11 @@ class CharacterDetailViewModel(
 
     fun updateFavoriteCharacterStatus(characterServer: CharacterServer, callback: (Int) -> Unit) {
         val character = characterServer.toCharacterEntity().apply {
-            statusFavorite = !statusFavorite
+            //statusFavorite = !statusFavorite
         }
 
         viewModelScope.launch {
-            val response = withContext(Dispatchers.Default) {
+            val response = withContext(Dispatchers.IO) {
                 characterRepository.updateFavoriteCharacterStatus(character)
             }
             callback(response)
@@ -82,12 +80,10 @@ class CharacterDetailViewModel(
     }
 
     private fun showLoading() {
-        isLoading = true
         _events.postValue(Event(CharacterDetailEvent.ShowLoadingListEpisodes))
     }
 
     private fun hideLoading() {
-        isLoading = false
         _events.postValue(Event(CharacterDetailEvent.HideLoadingListEpisodes))
     }
 

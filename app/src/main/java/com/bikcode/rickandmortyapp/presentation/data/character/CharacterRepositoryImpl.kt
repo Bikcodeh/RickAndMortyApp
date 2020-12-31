@@ -2,7 +2,6 @@ package com.bikcode.rickandmortyapp.presentation.data.character
 
 import androidx.lifecycle.LiveData
 import com.bikcode.rickandmortyapp.presentation.api.APIService
-import com.bikcode.rickandmortyapp.presentation.api.CharacterResponseServer
 import com.bikcode.rickandmortyapp.presentation.api.toCharacterDomainList
 import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
@@ -12,16 +11,21 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class CharacterRepositoryImpl(
     private val apiService: APIService,
     private val characterDao: CharacterDao
 ) : CharacterRepository {
-    override suspend fun isEmptyCharacters(): Int {
-        return characterDao.countCharacters()
+
+    override fun isEmptyCharacters(): Flow<Int> = flow {
+        characterDao.countCharacters().collect { emit(it) }
+    }
+
+    override fun getAllCharactersDB(): Flow<List<CharacterEntity>> = flow {
+        characterDao.getAllCharacters().collect { emit(it) }
     }
 
     override fun insertCharacters(characters: List<CharacterEntity>) {
@@ -38,15 +42,14 @@ class CharacterRepositoryImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override suspend fun getAllCharactersDB(): List<CharacterEntity> {
-        return characterDao.getAllCharacters()
-    }
-
     override fun getCharactersDB(): LiveData<List<CharacterEntity>> =
         characterDao.getAllFavoriteCharacters()
 
+    /**
+     * Quizaá esta logica se deba cambiar
+     */
     override fun getFavoriteCharacterStatus(id: Int): Maybe<Boolean> {
-        return characterDao.getCharacterById(id)
+        return characterDao.isCharacterFavorite(id)
             .isEmpty
             .flatMapMaybe { isEmpty ->
                 Maybe.just(!isEmpty)

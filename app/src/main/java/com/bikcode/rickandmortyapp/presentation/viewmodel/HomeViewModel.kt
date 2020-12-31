@@ -9,9 +9,8 @@ import com.bikcode.rickandmortyapp.presentation.data.character.CharacterReposito
 import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewModel() {
 
@@ -22,15 +21,17 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
 
     fun getAllCharactersDB(callback: (List<CharacterEntity>) -> Unit) {
         viewModelScope.launch {
-            val count =
-                withContext(Dispatchers.IO) { repositoryImpl.isEmptyCharacters() }
-
-            if (count > 0) {
-                val characters =
-                    withContext(Dispatchers.IO) { repositoryImpl.getAllCharactersDB() }
-                callback(characters)
-            } else {
-                getCharacters()
+            val count = repositoryImpl.isEmptyCharacters()
+            count.collect {
+                if (it > 0) {
+                    val characters =
+                        repositoryImpl.getAllCharactersDB()
+                    characters.collect { characters ->
+                        callback.invoke(characters)
+                    }
+                } else {
+                    getCharacters()
+                }
             }
         }
     }
@@ -42,16 +43,16 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
             }
             .subscribe({
                 hideLoading()
-                _events.postValue(Event(CharacterState.ShowCharacterList(it)))
+                _events.value = (Event(CharacterState.ShowCharacterList(it)))
             }, {
                 hideLoading()
-                _events.postValue(
-                    Event(
-                        CharacterState.ShowCharacterError(
-                            it.message ?: "Error"
+                _events.value = (
+                        Event(
+                            CharacterState.ShowCharacterError(
+                                it.message ?: "Error"
+                            )
                         )
-                    )
-                )
+                        )
             })
         )
     }
