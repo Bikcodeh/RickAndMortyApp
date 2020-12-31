@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
+import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import com.bikcode.rickandmortyapp.presentation.database.toCharacter
 import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterParcelable
 import com.bikcode.rickandmortyapp.presentation.ui.activity.CharacterDetailActivity
@@ -38,9 +39,13 @@ class HomeFragment : Fragment(), CharacterCallback {
         super.onViewCreated(view, savedInstanceState)
         init()
         homeViewModel.events.observe(viewLifecycleOwner, Observer(this::validateEvents))
-        homeViewModel.getAllCharactersDB() {
-            characterListAdapter.setData(it.map { character -> character.toCharacter() })
-        }
+
+        homeViewModel.data.observe(viewLifecycleOwner, Observer {
+            if(it.isNotEmpty())
+                characterListAdapter.setData(it.map { itemList -> itemList.toCharacter() })
+            else
+                homeViewModel.getCharacters()
+        })
     }
 
     private fun init() {

@@ -38,7 +38,7 @@ class CharacterRepositoryImpl(
             .subscribeOn(Schedulers.io())
     }
 
-    override suspend fun getAllCharactersDB(): List<CharacterEntity> {
+    override fun getAllCharactersDB(): LiveData<List<CharacterEntity>> {
         return characterDao.getAllCharacters()
     }
 

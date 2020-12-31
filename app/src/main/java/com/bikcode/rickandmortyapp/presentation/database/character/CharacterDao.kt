@@ -15,7 +15,7 @@ interface CharacterDao {
     suspend fun countCharacters(): Int
 
     @Query("SELECT * FROM character")
-    suspend fun getAllCharacters(): List<CharacterEntity>
+    fun getAllCharacters(): LiveData<List<CharacterEntity>>
 
     @Query("SELECT * FROM Character WHERE status_favorite = 1")
     fun getAllFavoriteCharacters(): LiveData<List<CharacterEntity>>

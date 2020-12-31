@@ -12,7 +12,7 @@ interface CharacterRepository {
     suspend fun isEmptyCharacters(): Int
     fun insertCharacters(characters: List<CharacterEntity>)
     fun getCharacters(): Single<List<Character>>
-    suspend fun getAllCharactersDB(): List<CharacterEntity>
+    fun getAllCharactersDB(): LiveData<List<CharacterEntity>>
     fun getCharactersDB(): LiveData<List<CharacterEntity>>
     fun getFavoriteCharacterStatus(id: Int): Maybe<Boolean>
     suspend fun updateFavoriteCharacterStatus(characterEntity: CharacterEntity): Int

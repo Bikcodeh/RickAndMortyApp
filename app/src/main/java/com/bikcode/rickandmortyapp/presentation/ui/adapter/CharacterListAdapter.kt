@@ -2,6 +2,7 @@ package com.bikcode.rickandmortyapp.presentation.ui.adapter
 
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.databinding.ItemCharacterBinding
@@ -15,10 +16,12 @@ class CharacterListAdapter(private val characterCallback: CharacterCallback) :
 
     private val characterList: MutableList<Character> = mutableListOf()
 
-    fun setData(characterList: List<Character>) {
+    fun setData(newCharacterList: List<Character>) {
+        val diffCallback = CharacterDiffCallback(characterList, newCharacterList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         this.characterList.clear()
-        this.characterList.addAll(characterList)
-        notifyDataSetChanged()
+        this.characterList.addAll(newCharacterList)
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun getCharacterItem(position: Int) = characterList[position]
