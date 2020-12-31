@@ -9,7 +9,8 @@ data class Character(
     val status: String,
     val origin: Origin,
     val location: Location,
-    val episodeList: List<String>
+    val episodeList: List<String>,
+    val isFavorite: Boolean
 )
 
 data class Location(

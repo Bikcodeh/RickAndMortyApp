@@ -20,6 +20,11 @@ class FavoriteListAdapter : RecyclerView.Adapter<FavoriteListAdapter.FavoriteLis
         notifyDataSetChanged()
     }
 
+    fun clearData() {
+        characterList.clear()
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = FavoriteListViewHolder(
         parent.bindingInflate(R.layout.item_favorite_character, false)
     )

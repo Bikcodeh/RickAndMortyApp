@@ -33,17 +33,23 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         favoriteViewModel.characterList.observe(viewLifecycleOwner, Observer {
             if(it.isNotEmpty()){
                 favoriteListAdapter.setData(it)
-                favorite_rv_characters.apply {
-                    layoutManager = GridLayoutManager(context, 2)
-                    adapter = favoriteListAdapter
-                }
+                favorite_tv_empty_message.isVisible = false
             } else {
+                favoriteListAdapter.clearData()
                 favorite_tv_empty_message.isVisible = true
             }
         })
+    }
+
+    private fun initView() {
+        favorite_rv_characters.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = favoriteListAdapter
+        }
     }
 
     companion object {

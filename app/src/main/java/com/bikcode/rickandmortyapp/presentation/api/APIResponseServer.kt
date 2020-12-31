@@ -29,7 +29,8 @@ data class CharacterServer(
     @SerializedName(KEY_STATUS) val status: String,
     @SerializedName(KEY_ORIGIN) val origin: OriginServer,
     @SerializedName(KEY_LOCATION) val location: LocationServer,
-    @SerializedName(KEY_EPISODE) val episodeList: List<String>
+    @SerializedName(KEY_EPISODE) val episodeList: List<String>,
+    val isFavorite: Boolean = false
 ): Parcelable
 
 @Parcelize

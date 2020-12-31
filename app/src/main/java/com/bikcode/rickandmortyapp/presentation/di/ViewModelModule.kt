@@ -9,5 +9,5 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { HomeViewModel(get()) }
     viewModel { CharacterDetailViewModel(episodeRepository = get(), characterRepository = get()) }
-    viewModel { FavoriteViewModel(get()) }
+    viewModel { FavoriteViewModel(characterRepository =  get()) }
 }

@@ -13,7 +13,8 @@ fun CharacterResponseServer.toCharacterDomainList(): List<Character> = results.m
             status,
             origin.toOriginDomain(),
             location.toLocationDomain(),
-            episodeList.map { episode -> "$episode/" }
+            episodeList.map { episode -> "$episode/" },
+            isFavorite
         )
     }
 }

@@ -16,7 +16,8 @@ fun Character.toCharacterParcelable() = CharacterParcelable(
     status,
     origin.toOriginParcelable(),
     location.toLocationParcelable(),
-    episodeList
+    episodeList,
+    isFavorite
 )
 
 fun Location.toLocationParcelable() = LocationParcelable(
@@ -38,7 +39,8 @@ fun CharacterParcelable.toCharacterServer() = CharacterServer(
     status,
     origin.toOriginServer(),
     location.toLocationServer(),
-    episodeList
+    episodeList,
+    isFavorite
 )
 
 fun LocationParcelable.toLocationServer() = LocationServer(

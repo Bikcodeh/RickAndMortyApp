@@ -13,7 +13,8 @@ data class CharacterParcelable(
     val status: String,
     val origin: OriginParcelable,
     val location: LocationParcelable,
-    val episodeList: List<String>
+    val episodeList: List<String>,
+    val isFavorite: Boolean
 ): Parcelable
 
 @Parcelize

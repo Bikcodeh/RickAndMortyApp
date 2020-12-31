@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bikcode.rickandmortyapp.R
 import com.bikcode.rickandmortyapp.interfaces.CharacterCallback
+import com.bikcode.rickandmortyapp.presentation.database.toCharacter
 import com.bikcode.rickandmortyapp.presentation.parcelables.toCharacterParcelable
 import com.bikcode.rickandmortyapp.presentation.ui.activity.CharacterDetailActivity
 import com.bikcode.rickandmortyapp.presentation.ui.adapter.CharacterListAdapter
@@ -36,14 +37,18 @@ class HomeFragment : Fragment(), CharacterCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
-
-
         homeViewModel.events.observe(viewLifecycleOwner, Observer(this::validateEvents))
-        homeViewModel.getCharacters()
+        homeViewModel.getAllCharactersDB() {
+            characterListAdapter.setData(it.map { character -> character.toCharacter() })
+        }
     }
 
     private fun init() {
         characterListAdapter = CharacterListAdapter(this)
+        home_rv_characters.apply {
+            layoutManager = GridLayoutManager(context, 2)
+            adapter = characterListAdapter
+        }
     }
 
     private fun validateEvents(event: Event<HomeViewModel.CharacterState>?) {
@@ -51,10 +56,6 @@ class HomeFragment : Fragment(), CharacterCallback {
             when(navigation){
                 is HomeViewModel.CharacterState.ShowCharacterList -> navigation.run {
                     characterListAdapter.setData(navigation.characterList)
-                    home_rv_characters.apply {
-                        layoutManager = GridLayoutManager(context, 2)
-                        adapter = characterListAdapter
-                    }
                     home_progress.visibility = View.GONE
                 }
                 is HomeViewModel.CharacterState.ShowCharacterError -> navigation.run {

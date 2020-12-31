@@ -3,10 +3,15 @@ package com.bikcode.rickandmortyapp.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bikcode.rickandmortyapp.presentation.data.Character
 import com.bikcode.rickandmortyapp.presentation.data.character.CharacterRepositoryImpl
+import com.bikcode.rickandmortyapp.presentation.database.CharacterEntity
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewModel() {
 
@@ -14,6 +19,21 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
     val events: LiveData<Event<CharacterState>> get() = _events
 
     private var isLoading = false
+
+    fun getAllCharactersDB(callback: (List<CharacterEntity>) -> Unit) {
+        viewModelScope.launch {
+            val count =
+                withContext(Dispatchers.IO) { repositoryImpl.isEmptyCharacters() }
+
+            if (count > 0) {
+                val characters =
+                    withContext(Dispatchers.IO) { repositoryImpl.getAllCharactersDB() }
+                callback(characters)
+            } else {
+                getCharacters()
+            }
+        }
+    }
 
     fun getCharacters() {
         disposable.add(repositoryImpl.getCharacters()
@@ -25,7 +45,13 @@ class HomeViewModel(private val repositoryImpl: CharacterRepositoryImpl) : ViewM
                 _events.postValue(Event(CharacterState.ShowCharacterList(it)))
             }, {
                 hideLoading()
-                _events.postValue(Event(CharacterState.ShowCharacterError(it.message ?: "Error")))
+                _events.postValue(
+                    Event(
+                        CharacterState.ShowCharacterError(
+                            it.message ?: "Error"
+                        )
+                    )
+                )
             })
         )
     }

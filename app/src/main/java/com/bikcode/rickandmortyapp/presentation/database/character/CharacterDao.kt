@@ -8,7 +8,16 @@ import io.reactivex.Maybe
 @Dao
 interface CharacterDao {
 
-    @Query("SELECT * FROM Character")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCharacters(characters: List<CharacterEntity>)
+
+    @Query("SELECT COUNT(character_id) FROM character")
+    suspend fun countCharacters(): Int
+
+    @Query("SELECT * FROM character")
+    suspend fun getAllCharacters(): List<CharacterEntity>
+
+    @Query("SELECT * FROM Character WHERE status_favorite = 1")
     fun getAllFavoriteCharacters(): LiveData<List<CharacterEntity>>
 
     @Query("SELECT * FROM Character WHERE character_id = :id")
@@ -16,6 +25,9 @@ interface CharacterDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCharacter(characterEntity: CharacterEntity)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateStatus(characterEntity: CharacterEntity): Int
 
     @Delete
     fun deleteCharacter(characterEntity: CharacterEntity)

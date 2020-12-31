@@ -37,7 +37,9 @@ class CharacterDetailActivity : AppCompatActivity() {
             characterDetailViewModel.getEpisodes(it.episodeList)
             characterDetailViewModel.validateCharacter(it.toCharacterServer())
             detail_iv_favorite.setOnClickListener { _ ->
-                characterDetailViewModel.updateFavoriteCharacterStatus(it.toCharacterServer())
+                characterDetailViewModel.updateFavoriteCharacterStatus(it.toCharacterServer()) { favorite ->
+                    validateFavoriteStatus(favorite)
+                }
             }
         }
     }
@@ -67,9 +69,9 @@ class CharacterDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateFavoriteStatus(isFavorite: Boolean?) {
+    private fun validateFavoriteStatus(isFavorite: Int) {
         detail_iv_favorite.setImageResource(
-            if (isFavorite != null && isFavorite) {
+            if (isFavorite == 1) {
                 R.drawable.ic_favorite
             } else {
                 R.drawable.ic_favorite_border
@@ -80,8 +82,8 @@ class CharacterDetailActivity : AppCompatActivity() {
     private fun initComponents() {
         intent?.let {
             characterParcelable = it.getParcelableExtra<CharacterParcelable>("user")
+            bind(characterParcelable)
         }
-        bind(characterParcelable)
     }
 
     private fun bind(characterParcelable: CharacterParcelable?) {
@@ -96,6 +98,11 @@ class CharacterDetailActivity : AppCompatActivity() {
             detail_tv_gender.text = data.gender
             detail_tv_status.text = data.status
             detail_tv_origin.text = data.origin.name
+            /*if(data.isFavorite) {
+                detail_iv_favorite.setImageResource(R.drawable.ic_favorite)
+            } else {
+                detail_iv_favorite.setImageResource(R.drawable.ic_favorite_border)
+            }*/
         }
     }
 }

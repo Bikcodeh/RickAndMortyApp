@@ -85,6 +85,10 @@ dependencies {
     implementation rxKotlinLib
     implementation rxJavaLib
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    implementation "androidx.room:room-ktx:2.2.6"
+
+
     //Picasso
     implementation picassoLib
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

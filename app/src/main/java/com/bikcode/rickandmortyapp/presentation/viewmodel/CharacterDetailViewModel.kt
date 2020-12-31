@@ -3,6 +3,7 @@ package com.bikcode.rickandmortyapp.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.bikcode.rickandmortyapp.presentation.api.CharacterServer
 import com.bikcode.rickandmortyapp.presentation.api.EpisodeServer
 import com.bikcode.rickandmortyapp.presentation.data.character.CharacterRepositoryImpl
@@ -13,6 +14,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CharacterDetailViewModel(
     private val episodeRepository: EpisodeRepositoryImpl,
@@ -22,8 +26,8 @@ class CharacterDetailViewModel(
     private val _events: MutableLiveData<Event<CharacterDetailEvent>> = MutableLiveData()
     val events: LiveData<Event<CharacterDetailEvent>> get() = _events
 
-    private val _isFavorite: MutableLiveData<Boolean> = MutableLiveData()
-    val isFavorite: LiveData<Boolean> get() = _isFavorite
+    private val _isFavorite: MutableLiveData<Int> = MutableLiveData()
+    val isFavorite: LiveData<Int> get() = _isFavorite
 
     private var isLoading = false
 
@@ -60,15 +64,21 @@ class CharacterDetailViewModel(
     private fun validateFavoriteCharacterStatus(id: Int) {
         disposable.add(characterRepository.getFavoriteCharacterStatus(id)
             .subscribe { isFavorite ->
-                _isFavorite.value = isFavorite
+                _isFavorite.value = if(isFavorite) 1 else 0
             })
     }
 
-    fun updateFavoriteCharacterStatus(characterServer: CharacterServer) {
-        disposable.add(characterRepository.updateFavoriteCharacterStatus(characterServer.toCharacterEntity())
-            .subscribe { isFavorite ->
-                _isFavorite.value = isFavorite
-            })
+    fun updateFavoriteCharacterStatus(characterServer: CharacterServer, callback: (Int) -> Unit) {
+        val character = characterServer.toCharacterEntity().apply {
+            statusFavorite = !statusFavorite
+        }
+
+        viewModelScope.launch {
+            val response = withContext(Dispatchers.Default) {
+                characterRepository.updateFavoriteCharacterStatus(character)
+            }
+            callback(response)
+        }
     }
 
     private fun showLoading() {

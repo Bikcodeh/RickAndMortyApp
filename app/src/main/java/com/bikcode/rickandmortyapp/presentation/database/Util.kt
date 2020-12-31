@@ -13,7 +13,8 @@ fun CharacterServer.toCharacterEntity() = CharacterEntity(
     status,
     origin.toOriginEntity(),
     location.toLocationEntity(),
-    episodeList
+    episodeList,
+    isFavorite
 )
 
 fun OriginServer.toOriginEntity() = OriginEntity(
