@@ -2,21 +2,22 @@ package com.bikcode.rickandmortyapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.bikcode.rickandmortyapp.util.RxSchedulerRule
-import com.bikcode.rickandmortyapp.presentation.data.*
 import com.bikcode.rickandmortyapp.presentation.data.character.CharacterRepositoryImpl
 import com.bikcode.rickandmortyapp.presentation.ui.utils.Event
 import com.bikcode.rickandmortyapp.presentation.viewmodel.HomeViewModel
+import com.bikcode.rickandmortyapp.util.RxSchedulerRule
+import com.bikcode.rickandmortyapp.util.mockedCharacter
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
+import org.mockito.BDDMockito.given
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.BDDMockito.*
 import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
 
 @RunWith(MockitoJUnitRunner::class)
@@ -55,7 +56,13 @@ class TestHomeViewModel {
 
         Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.ShowLoading))
         Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.HideLoading))
-        Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.ShowCharacterList(expectedResult)))
+        Mockito.verify(eventObserver).onChanged(
+            Event(
+                HomeViewModel.CharacterState.ShowCharacterList(
+                    expectedResult
+                )
+            )
+        )
 
         Mockito.verify(characterRepositoryImpl, Mockito.times(1)).getCharacters()
 
@@ -66,7 +73,11 @@ class TestHomeViewModel {
     @Test
     fun `onGetAllCharacters should return a error`() {
         val expectedResult = Throwable("Error")
-        Mockito.`when`(characterRepositoryImpl.getCharacters()).thenReturn(Single.error(expectedResult))
+        Mockito.`when`(characterRepositoryImpl.getCharacters()).thenReturn(
+            Single.error(
+                expectedResult
+            )
+        )
 
         homeViewModel.events.observeForever(eventObserver)
 
@@ -74,35 +85,25 @@ class TestHomeViewModel {
 
         Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.ShowLoading))
         Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.HideLoading))
-        Mockito.verify(eventObserver).onChanged(Event(HomeViewModel.CharacterState.ShowCharacterError(expectedResult.message!!)))
+        Mockito.verify(eventObserver).onChanged(
+            Event(
+                HomeViewModel.CharacterState.ShowCharacterError(
+                    expectedResult.message!!
+                )
+            )
+        )
 
         Mockito.verify(characterRepositoryImpl, Mockito.times(1)).getCharacters()
 
         Mockito.verifyNoMoreInteractions(characterRepositoryImpl)
         Mockito.verifyNoMoreInteractions(eventObserver)
     }
+
+    @Test
+    fun normal() {
+        Maybe.just(0)
+            .isEmpty
+            .test()
+            .assertResult(false)
+    }
 }
-
-val mockedOrigin = Origin(
-    "",
-    ""
-)
-
-
-val mockedLocation = Location(
-    "",
-    ""
-)
-
-val mockedCharacter = Character(
-    0,
-    "",
-    "",
-    "",
-    "",
-    "",
-    mockedOrigin,
-    mockedLocation,
-    listOf()
-)
-
