@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion "30.0.1"
 
     defaultConfig {
@@ -17,11 +17,20 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    buildFeatures{
+        dataBinding = true
+        viewBinding = true
     }
 
     kotlinOptions {
@@ -55,6 +64,7 @@ dependencies {
     //views
     implementation appCompatLib
     implementation constraintLayoutLib
+    implementation swipeRefreshLayoutLib
 
     //Retrofit
     implementation retrofitLib
@@ -69,18 +79,30 @@ dependencies {
     //Room
     implementation roomRuntimeLib
     implementation roomRxJava
-    implementation roomCompilerLib
+    kapt roomCompilerLib
 
     //RX
     implementation rxKotlinLib
+    implementation rxJavaLib
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+    implementation "androidx.room:room-ktx:2.2.6"
+
 
     //Picasso
     implementation picassoLib
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    //CircleImage
+    implementation circleImageLib
+
     //Testing
     testImplementation jUnitLib
+    testImplementation coreTestingLib
+    testImplementation coreTestingRoomLib
     androidTestImplementation jUnitExtLib
     androidTestImplementation espressoCoreLib
+    testImplementation "androidx.room:room-testing:2.2.5"
+    testImplementation mockitoCoreLib
 
 }
